@@ -1,0 +1,20 @@
+{
+  "name": "ingreso-gym",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^10.1.5"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.1",
+    "bootstrap": "^4.5.3",
+    "nodemon": "^2.0.6",
+    "promise-mysql": "^4.1.3"
+  }
+}
