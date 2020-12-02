@@ -3,8 +3,8 @@ const mysql = require('promise-mysql');
 const conexion = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '12345678',
-    database: 'ingresoGym'
+    password: 'Jvargas1996*',
+    database: 'worldgym'
 });
 
 function conectarme() {
@@ -14,3 +14,5 @@ function conectarme() {
 module.exports = {
     conectarme
 }
+
+//Configuracion y conexion a la db
