@@ -16,7 +16,7 @@ async function insert(tabla, campos) {
     //Los campos deben venir parseados según el tipo de dato que sean
     try {
         const conn = await conectarme();
-        const result = (await conn).query('INSERT INTO ' + tabla + ' ?', campos);
+        const result = (await conn).query('INSERT INTO ' + tabla + ' SET ?', campos);
         return result;
     } catch (error) {
         return error;
@@ -36,9 +36,21 @@ async function consulta(campos, tabla, where = '') {
     }
 }
 
+async function update(tabla, campos, condicion) {
+    //Los campos deben venir parseados según el tipo de dato que sean
+    try {
+        const conn = await conectarme();
+        const result = (await conn).query('UPDATE ' + tabla + ' SET ? WHERE ' + condicion, campos);
+        return result;
+    } catch (error) {
+        return error;
+    }
+}
+
 module.exports = {
-    conectarme,
-    consulta
+    insert,
+    consulta,
+    update
 }
 
 //Configuracion y conexion a la db
