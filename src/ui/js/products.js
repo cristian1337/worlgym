@@ -33,7 +33,7 @@ var DTtblCtg = $('#dataTable').DataTable({
             cambiarEstado(data[0], estado);
         });
 
-        $(row).on("click", ".editarProv", function (e) {
+        $(row).on("click", ".editarDatos", function (e) {
             e.preventDefault();
             editarDatos(data[0]);
         });
@@ -42,12 +42,17 @@ var DTtblCtg = $('#dataTable').DataTable({
 
 cargarProducts();
 
-$("#create").click(function () {
-    $("#Modal .modal-content").load('./pages/newProduct.html', function () {
+$("#create").click(async function () {
+    $("#Modal .modal-content").load('./pages/newProduct.html', async function () {
         $("#Modal").modal({
             backdrop: 'static',
             keyboard: true,
             show: true
+        });
+
+        let datosCategorias = await main.consultar("Nombre, idCategoria", "Categoria", "estado = 'activo' AND idCategoria > 0 ORDER BY Nombre ASC");
+        $.each(datosCategorias, function () {
+            $("#categoria").append('<option value="' + this.idCategoria + '">' + this.Nombre + '</option>');
         });
 
         $("#guardar").click(function () {
@@ -71,30 +76,32 @@ $("#create").click(function () {
 async function cargarProducts() {
     let datosProducto = await main.consultar("idProducto, Nombre, Descripcion, Stock, Costo, PrecioVenta, Categoria_idCategoria, Estado", "Producto", "");
     var filas = [];
-    $.each(datosProducto, async function () {
-        if (this.Estado == 'activo') {
-            editarEstado = '<button class="cambiaEstado btn btn-danger btn-xs" value="' + this.Estado + '" title="Inactivar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-times"></span></button>';
+    for (const Producto of datosProducto) {
+    //$.each(datosProducto, async function () {
+        if (Producto.Estado == 'activo') {
+            editarEstado = '<button class="cambiaEstado btn btn-danger btn-xs" value="' + Producto.Estado + '" title="Inactivar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-times"></span></button>';
         } else {
-            editarEstado = '<button class="cambiaEstado btn btn-success btn-xs" value="' + this.Estado + '" title="Activar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-check"></span></button>';
+            editarEstado = '<button class="cambiaEstado btn btn-success btn-xs" value="' + Producto.Estado + '" title="Activar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-check"></span></button>';
         }
 
-        editar = '<button class="editarProv btn btn-info btn-xs" title="Editar" style="margin-bottom:3px; margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-edit"></span></button>';
+        editar = '<button class="editarDatos btn btn-info btn-xs" title="Editar" style="margin-bottom:3px; margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-edit"></span></button>';
 
-        let categoria = await main.consultar("Nombre", "Categoria", "idCategoria = " + this.Categoria_idCategoria);
+        let categoria = await main.consultar("Nombre", "Categoria", "idCategoria = " + Producto.Categoria_idCategoria);
 
         var fila = {
-            0: this.idProducto,
-            1: this.Nombre,
-            2: this.Descripcion,
-            3: this.Stock,
-            4: this.Costo,
-            5: this.PrecioVenta,
+            0: Producto.idProducto,
+            1: Producto.Nombre,
+            2: Producto.Descripcion,
+            3: Producto.Stock,
+            4: Producto.Costo,
+            5: Producto.PrecioVenta,
             6: categoria[0].Nombre,
-            7: this.Estado,
+            7: Producto.Estado,
             8: editar + ' ' + editarEstado
         }
         filas.push(fila);
-    });
+    }
+    //});
     DTtblCtg.clear().draw();
     DTtblCtg.rows.add(filas).draw();
 }
@@ -115,12 +122,15 @@ async function cambiarEstado(id, estado) {
 
 async function editarDatos(id) {
     let datosProducto = await main.consultar("idProducto, Nombre, Descripcion, Stock, Costo, PrecioVenta, Categoria_idCategoria, Estado", "Producto", "idProducto = " + id);
+    let datosCategorias = await main.consultar("Nombre, idCategoria", "Categoria", "estado = 'activo' AND idCategoria > 0 ORDER BY Nombre ASC");
     $("#Modal .modal-content").load('./pages/newProduct.html', function () {
         $("#Modal").modal({
             backdrop: 'static',
             keyboard: true,
             show: true
         });
+
+        $(".modal-title").html("Editar Producto");
 
         $("#guardar").click(function () {
             const Producto = {
@@ -135,16 +145,18 @@ async function editarDatos(id) {
             setTimeout(function () { cargarProducts(); }, 500);
         });
 
+        $.each(datosCategorias, function () {
+            $("#categoria").append('<option value="' + this.idCategoria + '">' + this.Nombre + '</option>');
+        });
         
         $("#nombre").val(datosProducto[0].Nombre);
-        $("#descripcion").val(datosProducto[0].Nit);
+        $("#descripcion").val(datosProducto[0].Descripcion);
+        $("#stock").val(datosProducto[0].Stock);
+        $("#precio_venta").val(datosProducto[0].PrecioVenta);
+        $("#categoria [value=" + datosProducto[0].Categoria_idCategoria + "]").attr('selected', true);
         
         $("#nombre").attr('readonly', true);
-        
-        $("#nit").attr('readonly', true);
-        $("#direccion").val(datosProducto[0].Direccion);
-        $("#email").val(datosProducto[0].Email);
-        $("#telefono").val(datosProducto[0].Telefono);
-
+        $("#stock").attr('readonly', true);
+        $("#costo").parent().hide();
     });
 }
