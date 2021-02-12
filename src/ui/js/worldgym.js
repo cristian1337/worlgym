@@ -50,6 +50,7 @@ $(document).ready(async function () {
         $(".collapse").removeClass('show');
         $(this).parent().parent().addClass('show');
         $("#Modal .modal-content").load('./pages/' + $(this).attr('enlace'), async function () {
+            arrayProducto = [];
             $("#Modal").modal({
                 backdrop: 'static',
                 keyboard: true,
@@ -127,14 +128,14 @@ $(document).ready(async function () {
                     $(this).closest('tr').find('td:eq(0)').text(producto_idproducto);
                 });
 
-                $("[name='cantidad']").off("change").on("change", function (e) {
-                    var disponible = parseFloat($("[name='producto']").find('option:selected').attr('stock').trim());
-                    var cant = parseFloat($(this).val().trim());
-                    if (cant > disponible) {
-                        main.showNotification('No existen existencias suficientes del producto', 'Error');
-                        $(this).val(disponible);
-                    }
-                });
+                // $("[name='cantidad']").off("change").on("change", function (e) {
+                //     var disponible = parseFloat($("[name='producto']").find('option:selected').attr('stock').trim());
+                //     var cant = parseFloat($(this).val().trim());
+                //     if (cant > disponible) {
+                //         main.showNotification('No existen existencias suficientes del producto', 'Error');
+                //         $(this).val(disponible);
+                //     }
+                // });
 
                 $("[id=dataTableIngreso]").on("click", ".LimpiarDV", function (e) {
                     e.preventDefault();
@@ -217,7 +218,8 @@ $(document).ready(async function () {
                     insertProd = main.insertar('ProductosIngreso', ProductoPedido);
                     
                     const Producto = {
-                        Stock: this.disponible - this.cantidad
+                        Stock: this.disponible + this.cantidad,
+                        Costo: this.precio
                     }
 
                     updateProd = main.actualizar('Producto', Producto, "idProducto = " + this.producto_idproducto);
@@ -225,6 +227,180 @@ $(document).ready(async function () {
 
                 $('#Modal').modal('hide');
                 main.showNotification('Pedido guardado', 'Información');
+            });
+        });
+    });
+
+    $(".openModalVenta").click(function () {
+        $(".collapse").removeClass('show');
+        $(this).parent().parent().addClass('show');
+        $("#Modal .modal-content").load('./pages/' + $(this).attr('enlace'), async function () {
+            arrayProducto = [];
+            $("#Modal").modal({
+                backdrop: 'static',
+                keyboard: true,
+                show: true
+            });
+
+            $("#fecha").val(actualDate());
+
+            var DTtblVent = $('#dataTableVenta').DataTable({
+                "language": {
+                    "lengthMenu": "Mostrar _MENU_ registros por página",
+                    "zeroRecords": "Registros no encontrados",
+                    "info": "Página _PAGE_ de _PAGES_",
+                    "infoEmpty": "Registros no disponibles",
+                    "infoFiltered": "( Filtrados de _MAX_ registros)",
+                    "search": "Buscar",
+                    "paginate": {
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                processing: true,
+                pageLength: 10,
+                columnDefs: [
+                    {
+                        "className": "dt-center",
+                        "targets": "_all"
+                    },
+                    {
+                        targets: [0],
+                        visible: false
+                    }
+                ],
+                autoWidth: true,
+                order: [1, 'asc'],
+
+                createdRow: function (row, data, dataIndex) {
+
+                }
+            });
+
+            let datosProducto = await main.consultar("idProducto, Nombre, Descripcion, Stock, PrecioVenta", "Producto", "Estado = 'activo' ORDER BY Nombre ASC");
+            var selectProducto = '<select  name="producto" class="form-control producto">';
+            selectProducto += '<option value="">Seleccione...</option>';
+            $.each(datosProducto, function () {
+                selectProducto += '<option value="' + this.idProducto + '" stock="' + this.Stock + '" precio="' + this.PrecioVenta + '">' + this.Nombre + ' (' + this.Descripcion + ')</option>';
+            });
+            selectProducto += '</select>';
+
+            inputCantidad = '<input style="width: 70px;" type="number" min="1" name="cantidad">';
+            inputPrecio = '<input style="width: 100px;" type="number" min="1000" name="precio">';
+
+            $("[id=agregarProductoV]").on("click", function (e) {
+                e.preventDefault();
+                $(".agregarProductoV").prop("disabled", true);
+                var row = {
+                    0: '',
+                    1: selectProducto,
+                    2: inputCantidad,
+                    3: inputPrecio,
+                    4: '',
+                    5: "<center><button type='button' class='btnGuardarDV btn btn-primary btn-xs' title='Guardar' style='margin-right:5px'><i class='fas fa-save fa-xs'></i></button><button type='button' class='btn btn-danger btn-xs LimpiarDV' title='Eliminar'><i class='fas fa-eraser fa-xs'></i></button></center>"
+                }
+                DTtblVent.row.add(row).draw();
+                DTtblVent.order([0, 'asc']).draw();
+    
+                $(".producto").off("change").on("change", function (e) {
+                    var precio = $(this).find('option:selected').attr('precio');
+                    $("[name='precio']").val(precio);
+                    var producto_idproducto = $(this).closest('tr').find('td:eq(1) select').val();
+                    $(this).closest('tr').find('td:eq(0)').text(producto_idproducto);
+                });
+
+                $("[name='cantidad']").off("change").on("change", function (e) {
+                    var disponible = parseFloat($("[name='producto']").find('option:selected').attr('stock').trim());
+                    var cant = parseFloat($(this).val().trim());
+                    if (cant > disponible) {
+                        main.showNotification('No existen existencias suficientes del producto', 'Error');
+                        $(this).val(disponible);
+                    }
+                });
+
+                $("[id=dataTableVenta]").on("click", ".LimpiarDV", function (e) {
+                    e.preventDefault();
+                    if ($(this).val() == '') {
+                        DTtblVent.row($(this).closest('tr')).remove().draw();
+                        $(".agregarProductoV").prop("disabled", false);
+                    } else {
+                        arrayProducto.splice($(this).val(), 1);
+                        arrayProducto.sort();
+                        DTtblVent.row($(this).closest('tr')).remove().draw();
+                        agregarProducto(DTtblVent);
+                    }
+                    totalPedido();
+                });
+
+                $("[id=dataTableVenta]").on("click", ".btnGuardarDV", function (e) {
+                    e.preventDefault();
+                    if ($("[name='producto']").val() == '' || 
+                        $("[name='cantidad']").val() == '' ||
+                        $("[name='precio']").val() == ''
+                    ) {
+                        main.showNotification('Llenar todos los campos', 'Error');
+                        return false;
+                    } else {
+                        var disponible = parseFloat($("[name='producto']").find('option:selected').attr('stock').trim());
+                        var cant = parseFloat($(this).val().trim());
+                        if (cant > disponible) {
+                            main.showNotification('No existen existencias suficientes del producto', 'Error');
+                            $(this).val(disponible);
+                            return false;
+                        }
+                    }
+
+                    var fila = {
+                        producto_idproducto: $("[name='producto']").val(),
+                        nombre: $("[name='producto']").find('option:selected').text(),
+                        cantidad: parseFloat($("[name='cantidad']").val().trim()),
+                        precio: parseFloat($("[name='precio']").val().trim()),
+                        valor_total: $("[name='cantidad']").val().trim() * $("[name='precio']").val().trim(),
+                        disponible: parseFloat($("[name='producto']").find('option:selected').attr('stock').trim())
+                    };
+                    arrayProducto.push(fila);
+                    $(".agregarProductoV").prop("disabled", false);
+                    agregarProducto(DTtblVent);
+                    totalPedido();
+                });
+            });
+
+            $("#guardar_venta").click(async function () {
+
+                if (arrayProducto.length == 0) {
+                    main.showNotification('No existen productos a ingresar', 'Error');
+                    return false;
+                }
+                
+                const Venta = {
+                    Fecha: $("#fecha").val(),
+                    ValorTotal: $("#valor_total").val(),
+                    Usuario_idUsuario: $("#usuario").val()
+                }
+
+                insertVenta = await main.insertar('Venta', Venta);
+
+                var datoVenta = await main.consultar("idVenta", "Venta", "1 = 1 ORDER BY idVenta DESC");
+
+                $.each(arrayProducto, function() {
+                    const ProductoVenta = {
+                        Venta_idVenta: datoVenta[0].idVenta,
+                        Producto_idProducto: this.producto_idproducto,
+                        Cantidad: this.cantidad,
+                        ValorUnitario: this.precio
+                    }
+
+                    insertProd = main.insertar('ProductosVenta', ProductoVenta);
+                    
+                    const Producto = {
+                        Stock: this.disponible - this.cantidad
+                    }
+
+                    updateProd = main.actualizar('Producto', Producto, "idProducto = " + this.producto_idproducto);
+                });
+
+                $('#Modal').modal('hide');
+                main.showNotification('Venta Realizada', 'Información');
             });
         });
     });
@@ -238,7 +414,7 @@ function totalPedido(){
     $("#valor_total").val(suma);
 }
 
-function agregarProducto(DTtblIng) {
+function agregarProducto(DTtbl) {
     if (arrayProducto.length > 0) {
         var filas = [];
 
@@ -253,9 +429,9 @@ function agregarProducto(DTtblIng) {
             };
             filas.push(fila);
         }
-        DTtblIng.clear().draw();
-        DTtblIng.rows.add(filas).draw();
-        DTtblIng.order([0, 'asc']).draw();
+        DTtbl.clear().draw();
+        DTtbl.rows.add(filas).draw();
+        DTtbl.order([0, 'asc']).draw();
     }
 }
 
