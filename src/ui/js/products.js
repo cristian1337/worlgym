@@ -77,7 +77,6 @@ async function cargarProducts() {
     let datosProducto = await main.consultar("idProducto, Nombre, Descripcion, Stock, Costo, PrecioVenta, Categoria_idCategoria, Estado", "Producto", "");
     var filas = [];
     for (const Producto of datosProducto) {
-    //$.each(datosProducto, async function () {
         if (Producto.Estado == 'activo') {
             editarEstado = '<button class="cambiaEstado btn btn-danger btn-xs" value="' + Producto.Estado + '" title="Inactivar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-times"></span></button>';
         } else {
@@ -101,7 +100,6 @@ async function cargarProducts() {
         }
         filas.push(fila);
     }
-    //});
     DTtblCtg.clear().draw();
     DTtblCtg.rows.add(filas).draw();
 }

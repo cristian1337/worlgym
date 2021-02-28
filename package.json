@@ -9,17 +9,16 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^10.2.0"
+    "electron": "^10.4.0"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.1",
-    "alertify": "^0.3.0",
-    "bootstrap": "^4.5.3",
+    "@fortawesome/fontawesome-free": "^5.15.2",
+    "bootstrap": "^4.6.0",
     "bundle": "^2.1.0",
     "datatables.net-buttons-bs4": "^1.6.5",
-    "electron-reload": "*",
+    "fs-path": "^0.0.25",
     "jquery": "^3.4",
-    "nodemon": "^2.0.6",
+    "nodemon": "^2.0.7",
     "promise-mysql": "^4.1.4"
   }
 }

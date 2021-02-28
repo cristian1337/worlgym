@@ -120,22 +120,13 @@ $(document).ready(async function () {
                 }
                 DTtblIng.row.add(row).draw();
                 DTtblIng.order([0, 'asc']).draw();
-    
+
                 $(".producto").off("change").on("change", function (e) {
                     var precio = $(this).find('option:selected').attr('precio');
                     $("[name='precio']").val(precio);
                     var producto_idproducto = $(this).closest('tr').find('td:eq(1) select').val();
                     $(this).closest('tr').find('td:eq(0)').text(producto_idproducto);
                 });
-
-                // $("[name='cantidad']").off("change").on("change", function (e) {
-                //     var disponible = parseFloat($("[name='producto']").find('option:selected').attr('stock').trim());
-                //     var cant = parseFloat($(this).val().trim());
-                //     if (cant > disponible) {
-                //         main.showNotification('No existen existencias suficientes del producto', 'Error');
-                //         $(this).val(disponible);
-                //     }
-                // });
 
                 $("[id=dataTableIngreso]").on("click", ".LimpiarDV", function (e) {
                     e.preventDefault();
@@ -153,7 +144,7 @@ $(document).ready(async function () {
 
                 $("[id=dataTableIngreso]").on("click", ".btnGuardarDV", function (e) {
                     e.preventDefault();
-                    if ($("[name='producto']").val() == '' || 
+                    if ($("[name='producto']").val() == '' ||
                         $("[name='cantidad']").val() == '' ||
                         $("[name='precio']").val() == ''
                     ) {
@@ -185,7 +176,7 @@ $(document).ready(async function () {
             });
 
             $("#guardar_ingreso").click(async function () {
-                
+
                 if ($("#fecha").val() == '' || $("#proveedor").val() == '') {
                     main.showNotification('Por favor seleccione un proveedor', 'Error');
                     return false;
@@ -207,7 +198,7 @@ $(document).ready(async function () {
 
                 var datoPedido = await main.consultar("idIngreso", "Ingreso", "1 = 1 ORDER BY idIngreso DESC");
 
-                $.each(arrayProducto, function() {
+                $.each(arrayProducto, function () {
                     const ProductoPedido = {
                         Ingreso_idIngreso: datoPedido[0].idIngreso,
                         Producto_idProducto: this.producto_idproducto,
@@ -216,7 +207,7 @@ $(document).ready(async function () {
                     }
 
                     insertProd = main.insertar('ProductosIngreso', ProductoPedido);
-                    
+
                     const Producto = {
                         Stock: this.disponible + this.cantidad,
                         Costo: this.precio
@@ -227,6 +218,48 @@ $(document).ready(async function () {
 
                 $('#Modal').modal('hide');
                 main.showNotification('Pedido guardado', 'Información');
+
+                //Imprimir
+                const electron = require('electron')
+                // Importing BrowserWindow from Main 
+                const BrowserWindow = electron.remote.BrowserWindow;
+
+                var options = {
+                    silent: false,
+                    printBackground: true,
+                    color: false,
+                    margin: {
+                        marginType: 'printableArea'
+                    },
+                    landscape: false,
+                    pagesPerSheet: 1,
+                    collate: false,
+                    copies: 1,
+                    header: 'Header of the Page',
+                    footer: 'Footer of the Page'
+                }
+
+                var divContents = '<div class="form-group row"><label for="" class="col-sm-2 col-form-label">Fecha:</label>&nbsp;&nbsp;<label>' + $("#fecha").val() + '</label></div><br><br><table class="table table-striped table-bordered dt-responsive nowrap" id="dataTableProducts" width="100%" cellspacing="0" border="1">';
+                divContents += document.getElementById("dataTableIngreso").innerHTML;
+                divContents += '</table><br><br><div class="form-group row"><label for="" class="col-sm-2 col-form-label">Total:</label>&nbsp;&nbsp;<label>' + main.coin($("#valor_total").val().toString()) + '</label></div>';
+                main.guardaTemporal('src/ui/pages/temporal.html', divContents);
+                let window;
+                window = new BrowserWindow({
+                    width: 1000,
+                    height: 800,
+                    webPreferences: {
+                        nodeIntegration: true,
+                        enableRemoteModule: true
+                    }
+                })
+                window.loadFile('src/ui/pages/temporal.html');
+                window.on('shown', () => { window.focus() }); window.show();
+                let win = BrowserWindow.getFocusedWindow();
+                win.webContents.print(options, (success, failureReason) => {
+                    if (!success) console.log(failureReason);
+                    win.close();
+                    main.guardaTemporal('src/ui/pages/temporal.html', '');
+                });
             });
         });
     });
@@ -301,7 +334,7 @@ $(document).ready(async function () {
                 }
                 DTtblVent.row.add(row).draw();
                 DTtblVent.order([0, 'asc']).draw();
-    
+
                 $(".producto").off("change").on("change", function (e) {
                     var precio = $(this).find('option:selected').attr('precio');
                     $("[name='precio']").val(precio);
@@ -334,7 +367,7 @@ $(document).ready(async function () {
 
                 $("[id=dataTableVenta]").on("click", ".btnGuardarDV", function (e) {
                     e.preventDefault();
-                    if ($("[name='producto']").val() == '' || 
+                    if ($("[name='producto']").val() == '' ||
                         $("[name='cantidad']").val() == '' ||
                         $("[name='precio']").val() == ''
                     ) {
@@ -371,7 +404,7 @@ $(document).ready(async function () {
                     main.showNotification('No existen productos a ingresar', 'Error');
                     return false;
                 }
-                
+
                 const Venta = {
                     Fecha: $("#fecha").val(),
                     ValorTotal: $("#valor_total").val(),
@@ -382,7 +415,7 @@ $(document).ready(async function () {
 
                 var datoVenta = await main.consultar("idVenta", "Venta", "1 = 1 ORDER BY idVenta DESC");
 
-                $.each(arrayProducto, function() {
+                $.each(arrayProducto, function () {
                     const ProductoVenta = {
                         Venta_idVenta: datoVenta[0].idVenta,
                         Producto_idProducto: this.producto_idproducto,
@@ -391,7 +424,7 @@ $(document).ready(async function () {
                     }
 
                     insertProd = main.insertar('ProductosVenta', ProductoVenta);
-                    
+
                     const Producto = {
                         Stock: this.disponible - this.cantidad
                     }
@@ -401,17 +434,59 @@ $(document).ready(async function () {
 
                 $('#Modal').modal('hide');
                 main.showNotification('Venta Realizada', 'Información');
+
+                //Imprimir
+                const electron = require('electron')
+                // Importing BrowserWindow from Main 
+                const BrowserWindow = electron.remote.BrowserWindow;
+
+                var options = {
+                    silent: false,
+                    printBackground: true,
+                    color: false,
+                    margin: {
+                        marginType: 'printableArea'
+                    },
+                    landscape: false,
+                    pagesPerSheet: 1,
+                    collate: false,
+                    copies: 1,
+                    header: 'Header of the Page',
+                    footer: 'Footer of the Page'
+                }
+
+                var divContents = '<div class="form-group row"><label for="" class="col-sm-2 col-form-label">Fecha:</label>&nbsp;&nbsp;<label>' + $("#fecha").val() + '</label></div><br><br><table class="table table-striped table-bordered dt-responsive nowrap" id="dataTableProducts" width="100%" cellspacing="0" border="1">';
+                divContents += document.getElementById("dataTableVenta").innerHTML;
+                divContents += '</table><br><br><div class="form-group row"><label for="" class="col-sm-2 col-form-label">Total:</label>&nbsp;&nbsp;<label>' + main.coin($("#valor_total").val().toString()) + '</label></div>';
+                main.guardaTemporal('src/ui/pages/temporal.html', divContents);
+                let window;
+                window = new BrowserWindow({
+                    width: 1000,
+                    height: 800,
+                    webPreferences: {
+                        nodeIntegration: true,
+                        enableRemoteModule: true
+                    }
+                })
+                window.loadFile('src/ui/pages/temporal.html');
+                window.on('shown', () => { window.focus() }); window.show();
+                let win = BrowserWindow.getFocusedWindow();
+                win.webContents.print(options, (success, failureReason) => {
+                    if (!success) console.log(failureReason);
+                    win.close();
+                    main.guardaTemporal('src/ui/pages/temporal.html', '');
+                });
             });
         });
     });
 });
 
-function totalPedido(){
+function totalPedido() {
     var suma = 0;
-    $.each(arrayProducto, function() {
+    $.each(arrayProducto, function () {
         suma += parseFloat(this.valor_total);
     });
-    $("#valor_total").val(suma);
+    $("#valor_total").val(main.coin(suma.toString()));
 }
 
 function agregarProducto(DTtbl) {
