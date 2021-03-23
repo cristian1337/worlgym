@@ -187,9 +187,11 @@ $(document).ready(async function () {
                     }
                 }
 
+                var total = $("#valor_total").val();
+                total = total.replace(/\./g, '');
                 const Pedido = {
                     Fecha: $("#fecha").val(),
-                    ValorTotal: $("#valor_total").val(),
+                    ValorTotal: total,
                     Usuario_idUsuario: $("#usuario").val(),
                     Proveedor_idProveedor: $("#proveedor").val()
                 }
@@ -405,9 +407,11 @@ $(document).ready(async function () {
                     return false;
                 }
 
+                var total = $("#valor_total").val();
+                total = total.replace(/\./g, '');
                 const Venta = {
                     Fecha: $("#fecha").val(),
-                    ValorTotal: $("#valor_total").val(),
+                    ValorTotal: total,
                     Usuario_idUsuario: $("#usuario").val()
                 }
 
