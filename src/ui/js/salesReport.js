@@ -36,31 +36,6 @@ var DTtblCtg = $('#dataTable').DataTable({
 
 cargarSales();
 
-// $("#filtro").click(function () {
-//     $("#Modal .modal-content").load('./pages/productsList.html', function () {
-//         $("#Modal").modal({
-//             backdrop: 'static',
-//             keyboard: true,
-//             show: true
-//         });
-
-//         $("#guardar").click(function () {
-//             const proveedor = {
-//                 Nombre: $("#nombre").val(),
-//                 Nit: $("#nit").val(),
-//                 Direccion: $("#direccion").val(),
-//                 Email: $("#email").val(),
-//                 Telefono: $("#telefono").val(),
-//                 Estado: 'activo'
-//             }
-//             insert = main.insertar('Proveedor', proveedor);
-//             $('#Modal').modal('hide');
-//             main.showNotification('Guardado', 'Información');
-//             setTimeout(function () { cargarSales(); }, 500);
-//         });
-//     });
-// });
-
 async function cargarSales() {
     let saleData = await main.consultar("idVenta, DATE_FORMAT(Fecha, '%Y-%m-%d') AS Fecha, ValorTotal", "Venta", "");
     var filas = [];
@@ -166,28 +141,25 @@ function list(id) {
         }
 
         current.addEventListener('click', (event) => {
-            var divContents = '<div class="form-group row"><label for="" class="col-sm-2 col-form-label">Fecha:</label>&nbsp;&nbsp;<label>' + productsSale[0].Fecha + '</label></div><br><br><table class="table table-striped table-bordered dt-responsive nowrap" id="dataTableProducts" width="100%" cellspacing="0" border="1">';
-            divContents += document.getElementById("dataTableProducts").innerHTML;
-            divContents += '</table><br><br><div class="form-group row"><label for="" class="col-sm-2 col-form-label">Total:</label>&nbsp;&nbsp;<label>' + main.coin(productsSale[0].ValorTotal.toString()) + '</label></div>';
-            main.guardaTemporal('src/ui/pages/temporal.html', divContents);
             let window;
+            data = {"tipo": 1, "id": id}
+            window = newWindowImprimir('src/ui/pages/factura.html', 220, 400, window, data);
+            window.on('shown', () => { window.focus() }); window.show();
+            let win = BrowserWindow.getFocusedWindow();
+        });
+
+        function newWindowImprimir(location, wt = 1200, ht = 1000, window, data = {}) {
             window = new BrowserWindow({
-                width: 1000,
-                height: 800,
+                width: wt,
+                height: ht,
                 webPreferences: {
                     nodeIntegration: true,
                     enableRemoteModule: true
                 }
             })
-            window.loadFile('src/ui/pages/temporal.html');
-            window.on('shown', () => { window.focus() }); window.show();
-            let win = BrowserWindow.getFocusedWindow();
-            win.webContents.print(options, (success, failureReason) => {
-                if (!success) console.log(failureReason);
-                win.close();
-                main.guardaTemporal('src/ui/pages/temporal.html', '');
-            });
-        });
+            window.loadFile(location, {query: {"data": JSON.stringify(data)}});
+            return window;
+        };
 
     });
 }
@@ -212,3 +184,4 @@ function coin(value) {
 
     return value.indexOf(',') != -1 ? integer + ',' + parts[1] : integer;
 }
+
