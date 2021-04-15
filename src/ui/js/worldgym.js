@@ -4,8 +4,16 @@ const main = require('../main.js');
 var arrayProducto = [];
 
 $(document).ready(async function () {
-    let datosEmpresa = await main.consultar("Valor", "Configuracion", "Nombre = 'empresa'");
-    $("#empresa").html(datosEmpresa[0].Valor);
+    // Nombre de la empresa
+    let datosEmpresa = await main.consultar("valor", "configuracion", "nombre = 'empresa'");
+    $("#empresa").html(datosEmpresa[0].valor);
+    // Icono según tipo de negocio
+    let icono = await main.consultar("valor", "configuracion", "nombre = 'icono'");
+    $("#icon_empresa").addClass(icono[0].valor);
+    // Slogan
+    let slogan = await main.consultar("valor", "configuracion", "nombre = 'slogan'");
+    $("#slogan").text(slogan[0].valor);
+
     $(".container-fluid").load('pages/inicio.html');
 
     $(".modules").click(function () {

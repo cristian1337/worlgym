@@ -1,7 +1,6 @@
 const { BrowserWindow } = require('electron');
 //llamado conexion db
 const { consulta, insert, update } = require('./database');
-var fs = require('fs-path');
 
 function consultar(campos, tabla, where) {
     return consulta(campos, tabla, where);
@@ -39,15 +38,6 @@ function showNotification(message = '', title = 'Basic Notification') {
     );
 }
 
-function guardaTemporal(archivo, texto) {
-    try {
-        fs.writeFileSync(archivo, texto);
-    } catch (err) {
-        // An error occurred
-        console.error(err);
-    }
-}
-
 function convertToInteger(value) {
     var i = value.replace(/\./g, '').indexOf(',');
     value = value.replace(/[^0-9]/g, '');
@@ -75,7 +65,6 @@ module.exports = {
     insertar,
     showNotification,
     actualizar,
-    guardaTemporal,
     coin
 };
 

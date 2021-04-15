@@ -1,10 +1,14 @@
 const mysql = require('promise-mysql');
 
 const conexion = mysql.createConnection({
+    // host: 'buvkt76ef6xcgoriefct-mysql.services.clever-cloud.com',
+    // user: 'uwgcu3zp0fumhlyd',
+    // password: 'pmHL6u53Tuc5qVm2qyv4',
+    // database: 'buvkt76ef6xcgoriefct',
     host: 'localhost',
     user: 'root',
     password: 'Jvargas1996*',
-    database: 'worldgym',
+    database: 'pos',
     insecureAuth : true
 });
 
