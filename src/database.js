@@ -9,7 +9,7 @@ const conexion = mysql.createConnection({
     user: 'root',
     password: 'Jvargas1996*',
     database: 'pos',
-    insecureAuth : true
+    insecureAuth: true
 });
 
 function conectarme() {
@@ -20,7 +20,13 @@ async function insert(tabla, campos) {
     //Los campos deben venir parseados según el tipo de dato que sean
     try {
         const conn = await conectarme();
-        const result = (await conn).query('INSERT INTO ' + tabla + ' SET ?', campos);
+        const result = conn.query('INSERT INTO ' + tabla + ' SET ?', campos, function (err, result, fields) {
+            if (err) {
+                console.log(err);
+            } else { 
+                localStorage.setItem('insertId', result.insertId);
+            }
+        });
         return result;
     } catch (error) {
         return error;
@@ -51,10 +57,22 @@ async function update(tabla, campos, condicion) {
     }
 }
 
+async function deleteInfo(tabla, condicion) {
+    //Los campos deben venir parseados según el tipo de dato que sean
+    try {
+        const conn = await conectarme();
+        const result = (await conn).query('DELETE FROM ' + tabla + ' WHERE ' + condicion);
+        return result;
+    } catch (error) {
+        return error;
+    }
+}
+
 module.exports = {
     insert,
     consulta,
-    update
+    update,
+    deleteInfo
 }
 
 //Configuracion y conexion a la db

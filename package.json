@@ -15,10 +15,21 @@
     "@fortawesome/fontawesome-free": "^5.15.2",
     "bootstrap": "^4.6.0",
     "bundle": "^2.1.0",
+    "datatables.net": "^1.10.24",
     "datatables.net-buttons-bs4": "^1.6.5",
+    "datatables.net-buttons-dt": "^1.7.0",
+    "datatables.net-dt": "^1.10.24",
     "electron-reload": "^1.5.0",
+    "fs-path": "^0.0.25",
     "jquery": "^3.4",
+    "jquery.easing": "^1.4.0",
+    "jszip": "^3.6.0",
     "nodemon": "^2.0.7",
-    "promise-mysql": "^4.1.4"
+    "pdfmake": "^0.1.71",
+    "promise-mysql": "^4.1.4",
+    "select2": "^4.1.0-rc.0",
+    "select2-theme-bootstrap4": "^1.0.0",
+    "tone": "^14.7.77",
+    "webcamjs": "^1.0.26"
   }
 }

@@ -2,7 +2,6 @@
 <html lang="es">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,11 +9,17 @@
     <title>POS</title>
     <!-- Custom fonts for this template-->
     <link href="./css/all.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="./css/sb-admin-2.min.css" rel="stylesheet">
-
+    <link href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="../../node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet">
+    <link href="./../../node_modules/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css">
+    <link href="./../../node_modules/select2-theme-bootstrap4/dist/select2-bootstrap.min.css" rel="stylesheet" type="text/css">
 </head>
 
 <body id="page-top">
@@ -24,7 +29,8 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center modules" enlace="inicio.html" href="#">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center modules" enlace="inicio.html"
+                href="#">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas" id="icon_empresa"></i>
                 </div>
@@ -43,7 +49,6 @@
             </li>
 
             <hr class="sidebar-divider">
-            
 
             <li class="nav-item">
                 <a class="nav-link openModalVenta" enlace="sale.html" href="#">
@@ -52,17 +57,12 @@
                 </a>
             </li>
 
-            
-
             <li class="nav-item">
-                <a class="nav-link openModalIngreso" enlace="entry.html" href="#">
+                <a class="nav-link openModal" enlace="entry.html" href="#">
                     <i class="fas fa-cash-register"></i>
                     <span>Nueva Compra</span>
                 </a>
             </li>
-
-            <!-- Divider -->
-            
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
@@ -76,22 +76,17 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item openModal" enlace="newProduct.html" href="#">Nuevo</a>
                         <a class="collapse-item modules" enlace="products.html" href="#">Lista</a>
-                        <a class="collapse-item modules" enlace="categories.html" href="#">Categorías</a>
+                        <a class="collapse-item modules" enlace="productsCategories.html" href="#">Categorías</a>
                     </div>
                 </div>
             </li>
 
-            <!-- Divider -->
-            
-
             <li class="nav-item">
-                <a class="nav-link modules" enlace="suppliers.html" href="#">
+                <a class="nav-link modules" enlace="supplies.html" href="#">
                     <i class="fas fa-archive"></i>
                     <span>Insumos</span>
                 </a>
             </li>
-
-            
 
             <li class="nav-item">
                 <a class="nav-link modules" enlace="suppliers.html" href="#">
@@ -99,9 +94,6 @@
                     <span>Proveedores</span>
                 </a>
             </li>
-
-            <!-- Divider -->
-            
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
@@ -113,21 +105,18 @@
                 <div id="menuGastos" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item openModal" enlace="#" href="#">Nuevo</a>
-                        <a class="collapse-item modules" enlace="#" href="#">Categorías</a>
+                        <a class="collapse-item openModal" enlace="expense.html" href="#">Nuevo</a>
+                        <a class="collapse-item modules" enlace="expenseCategories.html" href="#">Categorías</a>
                     </div>
                 </div>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link modules" enlace="#" href="#">
+                <a class="nav-link modules" enlace="tables.html" href="#">
                     <i class="fas fa-chair"></i>
                     <span>Mesas</span>
                 </a>
             </li>
-            
-            <!-- Divider -->
-            
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -136,7 +125,8 @@
                     <i class="fas fa-chart-bar"></i>
                     <span>Reportes</span>
                 </a>
-                <div id="collapseReports" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div id="collapseReports" class="collapse" aria-labelledby="headingPages"
+                    data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="">Inventario</a>
                         <a class="collapse-item" href="">Costos</a>
@@ -151,11 +141,6 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
         </ul>
         <!-- End of Sidebar -->
 
@@ -166,14 +151,15 @@
             <div id="content">
 
                 <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" style="text-align: center;">
-                        <span style="width: 80%; font-size: 30px;" aling="center" id="slogan">Slogan</span>
+                <nav class="navbar navbar-expand navbar-light bg-gradient-primary topbar mb-4 static-top shadow"
+                    style="text-align: center;">
+                    <span style="width: 80%; font-size: 30px; color: white;" aling="center" id="slogan">Slogan</span>
                 </nav>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    
+
                 </div>
                 <!-- End Page Content -->
 
@@ -201,38 +187,19 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div id="Modal" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" id="contenido_modal">
+
             </div>
         </div>
     </div>
 
-    <div id="Modal" class="modal fade bd-example-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content" id="contenido_modal">
-
-			</div>
-		</div>
-    </div>
-    
     <script>window.$ = window.jQuery = require('jquery');</script>
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/sb-admin-2.min.js"></script>
-    <script src="./js/worldgym.js"></script>
+    <script src="./js/index.js"></script>
 </body>
 
 </html>

@@ -1,4 +1,4 @@
-<link href="./css/newSupplier.css" rel="stylesheet" type="text/css">
+<link href="./css/newSupply.css" rel="stylesheet" type="text/css">
 <div class="modal-header">
     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">×</span>
@@ -13,26 +13,25 @@
             <div class="col-lg-7">
                 <div class="p-5">
                     <div class="text-center">
-                        <h1 class="h4 text-gray-900 mb-4">Proveedor!</h1>
+                        <h1 class="h4 text-gray-900 mb-4">Insumo!</h1>
                     </div>
                     <form class="user" id="form">
                         <div class="form-group">
                             <input type="text" class="form-control form-control-user" name="nombre" placeholder="Nombre" required>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control form-control-user" name="nit" placeholder="Nit">
+                            <textarea class="form-control form-control-user" name="descripcion"
+                                placeholder="Descripción"></textarea>
                         </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control form-control-user" name="direccion" placeholder="Dirección">
-                        </div>
-                        <div class="form-group">
-                            <input type="email" class="form-control form-control-user" name="email" placeholder="Correo Electrónico">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control form-control-user" name="telefono" placeholder="Teléfono" required>
+                        <div class="form-group row">
+                            <div class="col-sm-3 mb-3 mb-sm-0"></div>
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <input type="number" min="0" class="form-control form-control-user" name="stock"
+                                    placeholder="Stock" required>
+                            </div>
                         </div>
                         <button id="guardar" type="submit" class="btn btn-primary btn-user btn-block">
-                            Crear Proveedor
+                            Crear Insumo
                         </button>
                         <hr>
                     </form>

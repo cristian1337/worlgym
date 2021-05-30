@@ -1,0 +1,49 @@
+<link href="./css/expense.css" rel="stylesheet" type="text/css">
+<div class="modal-header">
+    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
+</div>
+<div class="modal-body">
+
+    <div class="card-body p-0">
+        <!-- Nested Row within Card Body -->
+        <div class="row">
+            <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+            <div class="col-lg-7">
+                <div class="p-5">
+                    <div class="text-center">
+                        <h1 class="h4 text-gray-900 mb-4">Gasto!</h1>
+                    </div>
+                    <form class="user" id="form">
+                        <div class="form-group">
+                            <input type="text" class="form-control form-control-user" name="fecha" placeholder="Fecha" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <select name="categoria_gasto_idcategoria_gasto" class="form-control form-control-user"
+                                placeholder="Categoría" required>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control form-control-user" name="descripcion"
+                                placeholder="Descripción"></textarea>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-3 mb-3 mb-sm-0"></div>
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <input type="text" min="1" class="form-control form-control-user" name="valor"
+                                    placeholder="Valor" id="valor" required>
+                            </div>
+                        </div>
+                        <button id="guardar" type="submit" class="btn btn-primary btn-user btn-block">
+                            Guardar Gasto
+                        </button>
+                        <hr>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./js/expense.js"></script>

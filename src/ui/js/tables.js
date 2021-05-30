@@ -1,11 +1,9 @@
-table = 'producto';
-modal = './pages/newProduct.html';
-fields = ['categoria_idcategoria', 'nombre', 'descripcion', 'tipo', 'stock', 'precio_venta', 'estado'];
-inactiveFields = ['nombre', 'tipo', 'stock'];
+table = 'mesa';
+modal = './pages/newTable.html';
+fields = ['nombre', 'estado'];
+inactiveFields = [];
 action = true;
-button = 'Actualizar Producto';
-var id = 0;
-var screen = 1;
+button = 'Actualizar Mesa';
 
 var DataTable = $('#dataTable').DataTable({
     language: {
@@ -58,35 +56,54 @@ $("#create").click(function () {
             keyboard: true,
             show: true
         });
+
+        $("form").on('submit', function (e) {
+            e.preventDefault();
+            const jsonData = main.serializeForm($("#form").serializeArray());
+
+            if (fields.includes('estado')) {
+                jsonData.estado = 'activo';
+            }
+
+            insert = main.insertar(table, jsonData);
+            $('#Modal').modal('hide');
+            main.showNotification('Guardado', '!');
+            setTimeout(function () { dataLoad(); }, 500);
+        });
     });
 });
+
+function serializeForm(Form) {
+    var FormObject = {};
+    $.each(Form,
+        function (i, v) {
+            FormObject[v.name] = v.value;
+        }
+    );
+    return FormObject;
+}
 
 async function dataLoad() {
     let data = await main.consultar("id" + table + "," + fields.join(','), table, "");
     var filas = [];
-    for (const product of data) {
+    $.each(data, function () {
         var stateEdit = '';
 
         if (fields.includes('estado')) {
-            if (product.estado == 'activo') {
-                stateEdit = '<button class="stateEdit btn btn-danger btn-xs" value="' + product.estado + '" title="Inactivar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-times"></span></button>';
+            if (this.estado == 'activo') {
+                stateEdit = '<button class="stateEdit btn btn-danger btn-xs" value="' + this.estado + '" title="Inactivar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-times"></span></button>';
             } else {
-                stateEdit = '<button class="stateEdit btn btn-success btn-xs" value="' + product.estado + '" title="Activar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-check"></span></button>';
+                stateEdit = '<button class="stateEdit btn btn-success btn-xs" value="' + this.estado + '" title="Activar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-check"></span></button>';
             }
         }
     
         edit = '<button class="editData btn btn-info btn-xs" title="Editar" style="margin-bottom:3px; margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-edit"></span></button>';
 
         var fila = {};
-        fila[0] = product['id' + table];
+        fila[0] = this['id' + table];
 
         for (i = 0; i < fields.length; i++) {
-            if (fields[i] == 'categoria_idcategoria') {
-                let categoria = await main.consultar("nombre", 'categoria', "idcategoria = " + product[fields[i]]);
-                fila[i + 1] = categoria[0].nombre;
-            } else {
-                fila[i + 1] = product[fields[i]];
-            }            
+            fila[i + 1] = this[fields[i]];            
         }
 
         if (action) {
@@ -94,7 +111,7 @@ async function dataLoad() {
         }
 
         filas.push(fila);
-    }
+    });
     DataTable.clear().draw();
     DataTable.rows.add(filas).draw();
 }
@@ -116,23 +133,8 @@ async function stateEdit(id, state) {
     setTimeout(function () { dataLoad(); }, 500);
 }
 
-async function editData(idData) {
-    id = idData;
+async function editData(id) {
     let data = await main.consultar("id" + table + "," + fields.join(','), table, "id" + table + " = " + id);
-    let dataSupply = await main.consultar("insumo_idinsumo, ip.cantidad, i.nombre", 'insumo_producto ip, insumo i', "ip.insumo_idinsumo = i.idinsumo AND ip.producto_idproducto = " + id);
-    
-    arraySupply = [];
-    $.each(dataSupply, function () {
-        var fila = {
-            insumo_idinsumo: this.insumo_idinsumo,
-            insumo: this.nombre,
-            cantidad: this.cantidad
-        };
-
-        // Se agregan los datos al arreglo de insumos
-        arraySupply.push(fila);
-    });
-
     $("#Modal .modal-content").load(modal, function () {
         $("#Modal").modal({
             backdrop: 'static',
@@ -141,15 +143,7 @@ async function editData(idData) {
         });
 
         for (i = 0; i < fields.length; i++) {
-            if ($("[name='" + fields[i] + "']").attr('type') == 'radio') {
-                $("[name='" + fields[i] + "'][value='" + data[0][fields[i]] + "']").click();
-            } else if (fields[i] == 'categoria_idcategoria') {
-                main.optionSelect2(fields[i], data[0][fields[i]]);
-            } else if (fields[i] == 'precio_venta') {
-                $("[name='" + fields[i] + "']").val(main.coin(data[0][fields[i]].toString()));
-            } else {
-                $("[name='" + fields[i] + "']").val(data[0][fields[i]]);
-            }
+            $("[name='" + fields[i] + "']").val(data[0][fields[i]]);
         }
 
         for (i = 0; i < inactiveFields.length; i++) {
@@ -157,5 +151,14 @@ async function editData(idData) {
         }
 
         $("#guardar").html(button);
+
+        $("form").on('submit', function (e) {
+            e.preventDefault();
+            const jsonData = main.serializeForm($("#form").serializeArray());
+            update = main.actualizar(table, jsonData, "id" + table + " = " + id);
+            $('#Modal').modal('hide');
+            main.showNotification('Registro Actualizado', '!');
+            setTimeout(function () { dataLoad(); }, 500);
+        });
     });
 }
