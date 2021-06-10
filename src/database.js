@@ -20,7 +20,7 @@ async function insert(tabla, campos) {
     //Los campos deben venir parseados según el tipo de dato que sean
     try {
         const conn = await conectarme();
-        const result = conn.query('INSERT INTO ' + tabla + ' SET ?', campos, function (err, result, fields) {
+        const result = (await conn).query('INSERT INTO ' + tabla + ' SET ?', campos, function (err, result, fields) {
             if (err) {
                 console.log(err);
             } else { 

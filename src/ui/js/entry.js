@@ -3,6 +3,10 @@ arrayAditionals = [];
 table = 'ingreso';
 
 $(document).ready(async function () {
+    $("#cancelar").click(function () {
+        $('#Modal').modal('hide');
+    });
+
     $("#fecha").val(main.actualDate());
 
     // Lista de Proveedores
@@ -277,7 +281,7 @@ $(document).ready(async function () {
 
             $('#Modal').modal('hide');
             main.showNotification('Guardado', '!');
-            setTimeout(function () { window.location.reload(); }, 500);
+            // setTimeout(function () { window.location.reload(); }, 500);
         }, 500);
     });
 });

@@ -19,6 +19,10 @@ var DataTable = $('#dataTable').DataTable({
         {
             targets: [0],
             visible: false
+        },
+        {
+            targets: [3],
+            width: '5%'
         }
     ],
     autoWidth: true,
@@ -91,13 +95,13 @@ async function dataLoad() {
 
         if (fields.includes('estado')) {
             if (this.estado == 'activo') {
-                stateEdit = '<button class="stateEdit btn btn-danger btn-xs" value="' + this.estado + '" title="Inactivar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-times"></span></button>';
+                stateEdit = '<button class="stateEdit btn btn-danger btn-sm" value="' + this.estado + '" title="Inactivar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-sm fa-times"></span></button>';
             } else {
-                stateEdit = '<button class="stateEdit btn btn-success btn-xs" value="' + this.estado + '" title="Activar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-check"></span></button>';
+                stateEdit = '<button class="stateEdit btn btn-success btn-sm" value="' + this.estado + '" title="Activar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-sm fa-check"></span></button>';
             }
         }
     
-        edit = '<button class="editData btn btn-info btn-xs" title="Editar" style="margin-bottom:3px; margin: 0px 0px 0px 6px;"><span class="fas fa-xs fa-edit"></span></button>';
+        edit = '<button class="editData btn btn-info btn-sm" title="Editar" style="margin-bottom:3px; margin: 0px 0px 0px 6px;"><span class="fas fa-sm fa-edit"></span></button>';
 
         var fila = {};
         fila[0] = this['id' + table];

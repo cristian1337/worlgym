@@ -6,7 +6,7 @@ const {app} = require('electron');
 const conection = require('./database');
 
 //Librerias
-require('electron-reload')(__dirname);
+//require('electron-reload')(__dirname);
 
 
 app.allowRendererProcessReuse = false;

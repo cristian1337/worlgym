@@ -1,5 +1,5 @@
 if (typeof id === 'undefined') {
-    arraySupply = [];    
+    arraySupply = [];
 }
 
 fields = ['categoria_idcategoria', 'nombre', 'descripcion', 'tipo', 'stock', 'precio_venta', 'estado'];
@@ -75,7 +75,7 @@ $(document).ready(async function () {
     // Datos a Ingresar en la tabla de insumos
     selectSupply = '<select name="insumo_idinsumo" class="form-control insumo"><option value="" selected>Insumo...</option></select>';
     inputAmount = '<input class="form-control" type="number" min="1" name="cantidad">';
-    buttons = "<span><center><button type='button' class='btnGuardarDV btn btn-primary btn-sm' title='Guardar' style='margin-right:5px'><i class='fas fa-save fa-xs'></i></button><button type='button' class='btn btn-danger btn-sm LimpiarDV' title='Eliminar'><i class='fas fa-eraser fa-xs'></i></button></center></span>";
+    buttons = "<span><center><button type='button' class='btnGuardarDV btn btn-primary btn-sm' title='Guardar' style='margin-right:5px'><i class='fas fa-save fa-sm'></i></button><button type='button' class='btn btn-danger btn-sm LimpiarDV' title='Eliminar'><i class='fas fa-eraser fa-sm'></i></button></center></span>";
 
     // Ingresar un nuevo insumo
     $("[id=newSupply]").on("click", function (e) {
@@ -199,7 +199,7 @@ function updateTable(DataTableSupply) {
             var fila = {
                 0: arraySupply[i].insumo,
                 1: arraySupply[i].cantidad,
-                2: "<center><button type='button' class='btn btn-danger btn-sm LimpiarDV' value=" + i + " title='Eliminar'><i class='fas fa-eraser fa-xs'></i></button></center>"
+                2: "<center><button type='button' class='btn btn-danger btn-sm LimpiarDV' value=" + i + " title='Eliminar'><i class='fas fa-eraser fa-sm'></i></button></center>"
             };
             filas.push(fila);
         }

@@ -18,10 +18,10 @@ function borrar(tabla, condicion) {
     return deleteInfo(tabla, condicion);
 }
 
-let window;
+let windowNew;
 
 function newWindow(location, wt = 1200, ht = 1000) {
-    window = new BrowserWindow({
+    windowNew = new BrowserWindow({
         width: wt,
         height: ht,
         webPreferences: {
@@ -29,7 +29,7 @@ function newWindow(location, wt = 1200, ht = 1000) {
             enableRemoteModule: true
         }
     })
-    window.loadFile(location);
+    windowNew.loadFile(location);
 };
 
 function showNotification(message = '', title = 'Basic Notification') {

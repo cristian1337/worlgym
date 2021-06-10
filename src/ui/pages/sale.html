@@ -1,62 +1,84 @@
-<link href="./css/all.css" rel="stylesheet" type="text/css">
-<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-<link href="./css/sb-admin-2.min.css" rel="stylesheet">
-<link href="../../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-<link href="./css/categories.css" rel="stylesheet">
-
 <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel">Nueva Venta</h5>
     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">×</span>
     </button>
 </div>
 
 <div class="modal-body">
-    <form id="new">
-        <div class="form-group row">
-            <label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
-            <input type="text" style="margin-top: 3px;" name="fecha" id="fecha" class="form-control form-control-sm col-sm-4" readonly>
-        </div>
-
+    <div class="card-body p-0">
+        <!-- Nested Row within Card Body -->
         <div class="row">
-            <div class="col-lg-1">
-                <button type="button" id="agregarProductoV" class="agregarProductoV btn btn-warning btn-xs">
-                    <i class="fas fa-plus"></i>
-                </button>
+            <div class="col-lg-12">
+                <div class="p-5">
+                    <div class="text-center">
+                        <h1 class="h4 text-gray-900 mb-4">Nueva Venta!</h1>
+                    </div>
+                    <form class="user" id="form">
+                        <div class="form-group row">
+                            <label style="margin-top: 12px; text-align: left;" for="fecha" class="col-sm-2">Fecha</label>
+                            <input type="text" name="fecha" id="fecha" class="form-control form-control-user col-sm-4" readonly>
+                            <input type="hidden" name="mesa_idmesa" id="mesa_idmesa">
+                            <input type="hidden" name="tipo" id="tipo" value="directa">
+                            <input type="hidden" name="estado" id="estado" value="finalizado">
+                        </div>
+
+                        <div class="form-group" id="products">
+                            <center><legend>Productos</legend></center>
+                            <div class="row">
+                                <div class="col-lg-1">
+                                    <button type="button" id="newProduct" class="newProduct btn btn-warning btn-sm">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered dt-responsive nowrap" id="dataTableProducts" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Cant</th>
+                                            <th>$ Unitario</th>
+                                            <th>$ Total</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-4">&nbsp;</div>
+                            <label style="margin-top: 9px; text-align: right;" for="valor_total" class="col-sm-4 col-form-label">Total Venta</label>
+                            <input type="text" name="valor" id="valor" class="form-control form-control-user form-control-sm col-sm-4" readonly>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <button id="cancelar" type="button" class="btn btn-secondary btn-user btn-block">
+                                    Cancelar
+                                </button>
+                            </div>
+                            <div class="col-sm-3">
+                                <button id="guardar" type="submit" class="btn btn-primary btn-user btn-block">
+                                    Guardar
+                                </button>
+                            </div>
+                            <div class="col-sm-3">
+                                <button id="cerrar" type="button" class="btn btn-danger btn-user btn-block">
+                                    Cerrar
+                                </button>
+                            </div>
+                            <div class="col-sm-3">
+                                <button id="facturar" type="button" class="btn btn-success btn-user btn-block">
+                                    Facturar
+                                </button>
+                            </div>
+                        </div>
+                        <hr>
+                    </form>
+                </div>
             </div>
         </div>
-
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered dt-responsive nowrap" id="dataTableVenta" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Producto</th>
-                        <th>Cantidad</th>
-                        <th>Valor Unitario</th>
-                        <th>Valor Total</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-
-        <div class="form-group row text-left">
-            <div class="col-sm-5">&nbsp;</div>
-            <label for="valor_total" class="col-sm-2 col-form-label">Total Pedido</label>
-            <input type="text" style="margin-top: 3px;" name="valor_total" id="valor_total" class="form-control form-control-sm col-sm-4" readonly>
-        </div>
-        <input type="hidden" name="usuario" id="usuario" value="1">
-    </form>
+    </div>
 </div>
-<div class="modal-footer border-bottom-primary">
-    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-    <a class="btn btn-primary" id="guardar_venta">Guardar</a>
-</div>
-
-
-<!-- Page level plugins -->
-<script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./js/sb-admin-2.min.js"></script>
-<script src="../../node_modules/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="../../node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="./js/sale.js"></script>
