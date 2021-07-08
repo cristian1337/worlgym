@@ -1,9 +1,5 @@
 table = 'insumo';
-modal = './pages/newSupply.html';
-fields = ['nombre', 'descripcion', 'stock', 'estado'];
-inactiveFields = ['nombre'];
-action = true;
-button = 'Actualizar Insumo';
+fields = ['nombre', 'descripcion', 'stock'];
 
 var DataTable = $('#dataTable').DataTable({
     language: {
@@ -15,10 +11,6 @@ var DataTable = $('#dataTable').DataTable({
         {
             "className": "dt-center",
             "targets": "_all"
-        },
-        {
-            targets: [0],
-            visible: false
         }
     ],
     autoWidth: true,
@@ -30,125 +22,41 @@ var DataTable = $('#dataTable').DataTable({
             autoFilter: true,
             Name: 'Datos'
         },
-        { extend: 'pdf' },
+        {
+            extend: 'pdf'
+        },
     ],
 
-    createdRow: function (row, data, dataIndex) {
-        $(row).on("click", ".stateEdit", function (e) {
-            e.preventDefault();
-            var estado = $(this).closest("tr").find("td:last .stateEdit").attr("value");
-            stateEdit(data[0], estado);
-        });
-
-        $(row).on("click", ".editData", function (e) {
-            e.preventDefault();
-            editData(data[0]);
-        });
-    }
+    createdRow: function (row, data, dataIndex) {}
 });
 
 dataLoad();
 
-$("#create").click(function () {
-    $("#Modal .modal-content").load(modal, function () {
-        $("#Modal").modal({
-            backdrop: 'static',
-            keyboard: true,
-            show: true
-        });
-
-        $("form").on('submit', function (e) {
-            e.preventDefault();
-            const jsonData = main.serializeForm($("#form").serializeArray());
-
-            if (fields.includes('estado')) {
-                jsonData.estado = 'activo';
-            }
-            
-            insert = main.insertar(table, jsonData);
-            $('#Modal').modal('hide');
-            main.showNotification('Guardado', '!');
-            setTimeout(function () { dataLoad(); }, 500);
-        });
-    });
-});
-
 async function dataLoad() {
-    let data = await main.consultar("id" + table + "," + fields.join(','), table, "");
+    let data = await main.consultar(fields.join(','), table, "");
     var filas = [];
     $.each(data, function () {
-        var stateEdit = '';
-
-        if (fields.includes('estado')) {
-            if (this.estado == 'activo') {
-                stateEdit = '<button class="stateEdit btn btn-danger btn-sm" value="' + this.estado + '" title="Inactivar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-sm fa-times"></span></button>';
-            } else {
-                stateEdit = '<button class="stateEdit btn btn-success btn-sm" value="' + this.estado + '" title="Activar" style="margin-bottom:3px;margin: 0px 0px 0px 6px;"><span class="fas fa-sm fa-check"></span></button>';
-            }
-        }
-    
-        edit = '<button class="editData btn btn-info btn-sm" title="Editar" style="margin-bottom:3px; margin: 0px 0px 0px 6px;"><span class="fas fa-sm fa-edit"></span></button>';
-
         var fila = {};
-        fila[0] = this['id' + table];
+        fila[0] = 'Insumo';
 
         for (i = 0; i < fields.length; i++) {
-            fila[i + 1] = this[fields[i]];            
+            fila[i + 1] = this[fields[i]];
         }
 
-        if (action) {
-            fila[fields.length + 1] = edit + ' ' + stateEdit;
+        filas.push(fila);
+    });
+
+    let dataProduct = await main.consultar(fields.join(','), 'producto', "");
+    $.each(dataProduct, function () {
+        var fila = {};
+        fila[0] = 'Producto';
+
+        for (i = 0; i < fields.length; i++) {
+            fila[i + 1] = this[fields[i]];
         }
 
         filas.push(fila);
     });
     DataTable.clear().draw();
     DataTable.rows.add(filas).draw();
-}
-
-async function stateEdit(id, state) {
-
-    if (state == 'activo') {
-        state = 'inactivo';
-    } else {
-        state = 'activo';
-    }
-
-    const jsonData = {
-        estado: state
-    }
-
-    update = main.actualizar(table, jsonData, 'id' + table + ' = ' + id);
-    main.showNotification('Registro ' + state, '!');
-    setTimeout(function () { dataLoad(); }, 500);
-}
-
-async function editData(id) {
-    let data = await main.consultar("id" + table + "," + fields.join(','), table, "id" + table + " = " + id);
-    $("#Modal .modal-content").load(modal, function () {
-        $("#Modal").modal({
-            backdrop: 'static',
-            keyboard: true,
-            show: true
-        });
-
-        for (i = 0; i < fields.length; i++) {
-            $("[name='" + fields[i] + "']").val(data[0][fields[i]]);
-        }
-
-        for (i = 0; i < inactiveFields.length; i++) {
-            $("[name='" + inactiveFields[i] + "']").attr('readonly', true);
-        }
-
-        $("#guardar").html(button);
-
-        $("form").on('submit', function (e) {
-            e.preventDefault();
-            const jsonData = main.serializeForm($("#form").serializeArray());
-            update = main.actualizar(table, jsonData, "id" + table + " = " + id);
-            $('#Modal').modal('hide');
-            main.showNotification('Registro Actualizado', '!');
-            setTimeout(function () { dataLoad(); }, 500);
-        });
-    });
 }

@@ -275,7 +275,6 @@ $(document).ready(async function () {
                 }
 
                 insertProduct = await main.insertar('producto_venta', Product);
-                //updateamount(this.producto_idproducto, this.cantidad);
             });
 
             $('#Modal').modal('hide');
@@ -298,7 +297,6 @@ $(document).ready(async function () {
                     }
 
                     insertProduct = main.insertar('producto_venta', Product);
-                    //updateamount(this.producto_idproducto, this.cantidad);
                 });
                 $('#Modal').modal('hide');
                 main.showNotification('Guardado', '!');
@@ -396,26 +394,6 @@ function newWindowImprimir(location, wt = 1200, ht = 1000, windowFactura, data =
     })
     windowFactura.loadFile(location, { query: { "data": JSON.stringify(data) } });
     return windowFactura;
-}
-
-async function updateamount(idproducto, cant) {
-    producto = await main.consultar("stock,tipo", "producto", "idproducto = " + idproducto);
-
-    if (producto[0].tipo == 'simple') {
-        const UpdateCant = {
-            stock: producto[0].stock - cant
-        }
-        updateProd = main.actualizar('producto', UpdateCant, "idproducto = " + idproducto);
-    } else {
-        insumosProducto = await main.consultar("ip.cantidad, i.stock, i.idinsumo", "insumo i, insumo_producto ip", "ip.insumo_idinsumo = i.idinsumo AND ip.producto_idproducto = " + idproducto);
-        $.each(insumosProducto, async function () {
-            var Insumo = {
-                stock: this.stock - (this.cantidad * cant)
-            }
-
-            updateInsumo = main.actualizar('insumo', Insumo, "idinsumo = " + this.idinsumo);
-        });
-    }
 }
 
 function getDataForm() {
